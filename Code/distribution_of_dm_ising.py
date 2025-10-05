@@ -7,38 +7,46 @@ def main():
     
     lattice_dimension = 10
     flips = 0
-    iterations = 5000
-    all_magnetisation_data = {}
+    iterations = 50000
     
-    temperatures = [2.25]
+    temperature = 4
     
     lattice = np.ones(shape=(lattice_dimension, lattice_dimension), dtype = "int")
-    for temp in range(len(temperatures)):
-        magnetisation = [1]
-        for trial in range(iterations):
-            rows, columns = lattice.shape
-            for i in range(rows):
-                for j in range(columns):
-                    nbr = find_neighbours(lattice, rows, columns, i, j)
-                    sum_of_si_sj = sum(np.array(nbr)*lattice[i][j])
-                    e_flip = 2*(sum_of_si_sj)
+    magnetisation = [1]
+    for trial in range(iterations):
+        rows, columns = lattice.shape
+        for i in range(rows):
+            for j in range(columns):
+                nbr = find_neighbours(lattice, rows, columns, i, j)
+                sum_of_si_sj = sum(np.array(nbr)*lattice[i][j])
+                e_flip = 2*(sum_of_si_sj)
 
-                    lattice, flips = flip(e_flip, temperatures[temp], lattice, i, j, flips)
-                    
-            magnetisation.append(int(np.sum(np.array(lattice)))/(lattice_dimension**2))
+                lattice, flips = flip(e_flip, temperature, lattice, i, j, flips)
+                
+        magnetisation.append(int(np.sum(np.array(lattice)))/(lattice_dimension**2))
 
-        all_magnetisation_data[temp] = magnetisation
+    print(f"Temperature {temperature} Completed")
+    print(flips, " flips\nCurrent Lattice")
+    print(lattice)
 
-        print(f"Temperature {temperatures[temp]} Completed")
-        print(flips, " flips\nCurrent Lattice")
-        print(lattice)
+    delta_M_raw = np.diff(magnetisation).tolist()
+    delta_M = [round(float(value), 3) for value in delta_M_raw]
 
-    delta_M_raw = {key: abs(np.diff(value)).tolist() for key, value in all_magnetisation_data.items()}
-    delta_M = {key: [round(value, 3) for value in values] for key, values in delta_M_raw.items()}
-    for key in range(len(delta_M)):
-        freq = dict(Counter(delta_M[key]))
-        print(freq)
-    plot(freq, temperatures)
+    merged = []
+    buffer = delta_M[0]
+
+    for i in range(1, len(delta_M)):
+        current = delta_M[i]
+        if (buffer >= 0 and current >= 0) or (buffer < 0 and current < 0):
+            buffer += current
+        else:
+            merged.append(round(buffer, 3))
+            buffer = current
+
+    merged.append(round(buffer, 3))
+    freq = dict(Counter(merged))
+
+    plot(freq, temperature)
 
 def find_neighbours(lattice, rows, columns, i, j):
     nbr = []
@@ -63,12 +71,12 @@ def flip(e_flip, T, lattice, i, j, flips):
 
     return lattice, flips
 
-def plot(freq, temperatures):
+def plot(freq, temperature):
     plt.figure(figsize=(12, 7))
     magnetisation = list(freq.keys())
     frequency = list(freq.values())
 
-    plt.bar(magnetisation, frequency, width = 0.01, edgecolor = "black")
+    plt.bar(magnetisation, frequency, width = 0.01, edgecolor = "black", label=f"Temperature = {temperature}")
 
     plt.title("Distribution of Magnetisation Changes", fontsize=16, fontweight='bold')
     plt.xlabel("Change in Magnetisation", fontsize=14)
@@ -77,8 +85,10 @@ def plot(freq, temperatures):
     # plt.xscale("log")
     plt.yscale("log")
 
-    plt.xlim(0.01, 0.7)
+    plt.xlim(-2, 2)
+    
     plt.grid(True, linestyle='--', alpha=0.6)
+    plt.legend()
     
     plt.show()
 

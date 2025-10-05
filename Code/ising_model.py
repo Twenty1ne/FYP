@@ -7,16 +7,16 @@ def main():
     
     lattice_dimension = 10
     flips = 0
-    iterations = 1000
+    iterations = 500
     all_magnetisation_data = {}
     avg_magnetisation = []
     energies_per_spin = []
     energies_squared_per_spin = []
     
     # temperatures = [1.5, 2, 2.25, 4] ## for magnetisation vs time
-    # temperatures = np.linspace(1, 4, 31) ## for avg magnetisation vs temp
+    temperatures = np.linspace(1, 4, 31) ## for avg magnetisation vs temp
     # temperatures = np.linspace(0, 5, 51) ## for energy per spin vs temp
-    temperatures = np.linspace(1, 5, 41) ## for specific heat vs temp
+    # temperatures = np.linspace(1, 5, 41) ## for specific heat vs temp
     
     lattice = np.ones(shape=(lattice_dimension, lattice_dimension), dtype = "int")
     for temp in range(len(temperatures)):
@@ -37,7 +37,7 @@ def main():
             magnetisation.append(int(np.sum(np.array(lattice)))/(lattice_dimension**2))
 
         all_magnetisation_data[temp] = magnetisation
-        avg_magnetisation.append(abs(sum(magnetisation)/iterations))
+        avg_magnetisation.append(sum(magnetisation)/iterations)
         energies_squared = [x**2 for x in energies]
         energies_per_spin.append((sum(energies))/(iterations*(lattice_dimension**2)))
         energies_squared_per_spin.append((sum(energies_squared))/(iterations*(lattice_dimension**2)))
@@ -80,8 +80,8 @@ def flip(e_flip, T, lattice, i, j, flips):
 
 def plot(all_magnetisation_data, temperatures, avg_magnetisation, energies_per_spin, specific_heat):
     # ## magnetisation vs time
+    # plt.figure(figsize=(12, 7))
     # for T, magnetisation in all_magnetisation_data.items():
-    #     plt.figure(figsize=(12, 7))
     #     time_steps = list(range(len(magnetisation)))
     #     plt.plot(time_steps, magnetisation, label=f"T = {temperatures[T]}", linewidth=1)
 
@@ -95,16 +95,16 @@ def plot(all_magnetisation_data, temperatures, avg_magnetisation, energies_per_s
 
     #     plt.legend()
     
-    # ## avg magnetisation vs temp
-    # plt.figure(figsize=(12, 7))
-    # plt.scatter(temperatures, avg_magnetisation, marker='o')
+    ## avg magnetisation vs temp
+    plt.figure(figsize=(12, 7))
+    plt.scatter(temperatures, avg_magnetisation, marker='o')
 
-    # plt.title("Average Magnetisation vs Temperature", fontsize=16, fontweight='bold')
-    # plt.xlabel("Temperature", fontsize=14)
-    # plt.ylabel("Average Magnetisation", fontsize=14)
+    plt.title("Average Magnetisation vs Temperature", fontsize=16, fontweight='bold')
+    plt.xlabel("Temperature", fontsize=14)
+    plt.ylabel("Average Magnetisation", fontsize=14)
 
-    # plt.grid(True, linestyle='--', alpha=0.6)
-    # plt.axhline(0, color='gray', linestyle='--', linewidth=1)
+    plt.grid(True, linestyle='--', alpha=0.6)
+    plt.axhline(0, color='gray', linestyle='--', linewidth=1)
 
     # ## energy per spin vs temp
     # plt.figure(figsize=(12, 7))
@@ -117,16 +117,16 @@ def plot(all_magnetisation_data, temperatures, avg_magnetisation, energies_per_s
     # plt.grid(True, linestyle='--', alpha=0.6)
     # plt.axhline(0, color='gray', linestyle='--', linewidth=1)
     
-    ## specific heat vs temp
-    plt.figure(figsize=(12, 7))
-    plt.scatter(temperatures, specific_heat, marker='o')
+    # ## specific heat vs temp
+    # plt.figure(figsize=(12, 7))
+    # plt.scatter(temperatures, specific_heat, marker='o')
 
-    plt.title("Specific Heat Per Spin vs Temperature", fontsize=16, fontweight='bold')
-    plt.xlabel("Temperature", fontsize=14)
-    plt.ylabel("Specific Heat Per Spin", fontsize=14)
+    # plt.title("Specific Heat Per Spin vs Temperature", fontsize=16, fontweight='bold')
+    # plt.xlabel("Temperature", fontsize=14)
+    # plt.ylabel("Specific Heat Per Spin", fontsize=14)
 
-    plt.grid(True, linestyle='--', alpha=0.6)
-    plt.axhline(0, color='gray', linestyle='--', linewidth=1)
+    # plt.grid(True, linestyle='--', alpha=0.6)
+    # plt.axhline(0, color='gray', linestyle='--', linewidth=1)
     
     plt.show()
 
