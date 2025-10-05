@@ -78,18 +78,18 @@ int main(){
         std::cout << duration << std::endl;
     }
     
-    // // saving data to file to plot with python
-    // std::ofstream outfile("avg_mag_vs_duration_data.txt");
-    // if(outfile.is_open()){
-    //     for(int i = 0; i < iterations.size(); i++){
-    //         outfile << iterations[i] << " " << avg_magnetisations[i] << std::endl;
-    //     }
-    //     outfile.close();
-    //     std::cout << "Data written to avg_mag_vs_duration_data.txt";
-    // }
-    // else{
-    //     std::cout << "Error opening file";
-    // }
+    // saving data to file to plot with python
+    std::ofstream outfile("avg_mag_vs_duration_data.txt");
+    if(outfile.is_open()){
+        for(int i = 0; i < iterations.size(); i++){
+            outfile << iterations[i] << " " << avg_magnetisations[i] << std::endl;
+        }
+        outfile.close();
+        std::cout << "Data written to avg_mag_vs_duration_data.txt";
+    }
+    else{
+        std::cout << "Error opening file";
+    }
     
     std::cout << std::endl << std::endl;
     return 0;
