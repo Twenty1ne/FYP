@@ -11,5 +11,4 @@ Example figures extracted using this code is also provided for. However, if the 
 The Benchmarks folder contains scripts used for testing. However they are just adaptations of the code already present elsewhere, simplified to remove unnecessary code when testing.
 The modified D-T SOGM is also presented in this folder if one wishes to see exactly what was changed (logically) from the original model formulateed by Mondero (2025) - which can be found in his thesis.
 
-Thank you!
-- TJ
+Thank you! - TJ
